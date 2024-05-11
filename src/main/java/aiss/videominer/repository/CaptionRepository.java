@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CaptionRepository extends JpaRepository<Caption, String> {
+    Caption findOne(String id);
 }
