@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -39,8 +41,12 @@ public class CaptionController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<Caption> findAll(){
-        return captionRepository.findAll();
+    public List<Caption> findAll(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        Page<Caption> pageChannels;
+        PageRequest paging = PageRequest.of(page, size);
+        pageChannels = captionRepository.findAll(paging);
+        return pageChannels.getContent();
     }
 
 

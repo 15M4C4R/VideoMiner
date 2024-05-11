@@ -2,7 +2,6 @@ package aiss.videominer.controller;
 
 import aiss.videominer.exception.CommentNotFoundException;
 import aiss.videominer.exception.VideoNotFoundException;
-import aiss.videominer.model.Caption;
 import aiss.videominer.model.Comment;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.CommentRepository;
@@ -14,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,6 @@ public class CommentController {
     CommentRepository commentRepository;
     VideoRepository videoRepository;
 
-
-
     @Operation(
             description = "Get all comments",
             tags = {"comments", "get"}
@@ -41,8 +40,12 @@ public class CommentController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<Comment> findAll(){
-        return commentRepository.findAll();
+    public List<Comment> findAll(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        Page<Comment> pageChannels;
+        PageRequest paging = PageRequest.of(page, size);
+        pageChannels = commentRepository.findAll(paging);
+        return pageChannels.getContent();
     }
 
 
