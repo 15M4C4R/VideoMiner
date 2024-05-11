@@ -1,34 +1,46 @@
 package aiss.videominer.controller;
 
+import aiss.videominer.exception.CaptionNotFoundException;
+import aiss.videominer.exception.VideoNotFoundException;
 import aiss.videominer.model.Caption;
+import aiss.videominer.model.Video;
 import aiss.videominer.repository.CaptionRepository;
+import aiss.videominer.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/model/Caption")
-
+@RequestMapping("/videominer/captions")
 public class CaptionController {
-    private final CaptionRepository repository;
 
-    public CaptionController(CaptionRepository repository){
-        this.repository=repository;
-    }
+    @Autowired
+    CaptionRepository captionRepository;
+    VideoRepository videoRepository;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<Caption> FindAll(){
-        return repository.findAll();
+    public List<Caption> findAll(){
+        return captionRepository.findAll();
     }
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Caption findOne(@PathVariable String id){
-        return repository.findOne(id);
+    public Caption findOne(@PathVariable String id) throws CaptionNotFoundException {
+        Optional<Caption> caption = captionRepository.findById(id);
+        if(caption.isEmpty()) throw new CaptionNotFoundException();
+        return caption.get();
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{idVideo}")
+    public List<Caption> findVideoCaptions(@PathVariable String idVideo) throws VideoNotFoundException {
+        Optional<Video> video = videoRepository.findById(idVideo);
+        if(video.isEmpty()) throw new VideoNotFoundException();
+        return video.get().getCaptions();
+    }
 
 }
