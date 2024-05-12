@@ -45,7 +45,7 @@ public class CaptionController {
 
 
     @GetMapping
-    public List<Caption> findAll(@RequestParam(required = false) String name,
+    public List<Caption> findAll(@RequestParam(required = false) String language,
                                  @RequestParam(required = false) String order,
                                  @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size) {
@@ -65,8 +65,8 @@ public class CaptionController {
         }
 
         Page<Caption> pageChannels;
-        if(name != null) {
-            pageChannels = captionRepository.findByName(name, paging);
+        if(language != null) {
+            pageChannels = captionRepository.findByLanguage(language, paging);
         }
         else {
             pageChannels = captionRepository.findAll(paging);
