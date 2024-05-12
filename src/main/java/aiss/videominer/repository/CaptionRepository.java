@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CaptionRepository extends JpaRepository<Caption, String> {
-    Page<Caption> findByName(String name, Pageable pageable);
+    Page<Caption> findByLanguage(String language, Pageable pageable);
 }
