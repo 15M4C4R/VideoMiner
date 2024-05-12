@@ -95,7 +95,7 @@ public class CommentController {
 
 
 
-    @Operation(
+/*    @Operation(
             description = "Get the comments from a video by specifying its id",
             tags = {"comments", "video", "get"}
     )
@@ -110,5 +110,5 @@ public class CommentController {
         if(video.isEmpty()) throw new VideoNotFoundException();
         return video.get().getComments();
     }
-
+*/
 }

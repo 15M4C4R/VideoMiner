@@ -96,7 +96,7 @@ public class CaptionController {
 
 
 
-    @Operation(
+/*    @Operation(
             description = "Get a caption from a video by specifying its id",
             tags = {"caption", "video", "get"}
     )
@@ -111,5 +111,5 @@ public class CaptionController {
         if(video.isEmpty()) throw new VideoNotFoundException();
         return video.get().getCaptions();
     }
-
+*/
 }
