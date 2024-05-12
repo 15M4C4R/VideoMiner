@@ -3,6 +3,7 @@ package aiss.videominer.controller;
 import aiss.videominer.exception.CommentNotFoundException;
 import aiss.videominer.exception.VideoNotFoundException;
 import aiss.videominer.model.Comment;
+import aiss.videominer.model.User;
 import aiss.videominer.model.Video;
 import aiss.videominer.repository.CommentRepository;
 import aiss.videominer.repository.VideoRepository;
@@ -15,6 +16,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,15 +42,38 @@ public class CommentController {
             @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema())})
     })
     @ResponseStatus(HttpStatus.OK)
+
+
     @GetMapping
-    public List<Comment> findAll(@RequestParam(defaultValue = "0") int page,
+    public List<Comment> findAll(@RequestParam(required = false) User author,
+                                 @RequestParam(required = false) String order,
+                                 @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size) {
+        Pageable paging;
+        if(order != null) {
+            if(order.startsWith("-")) {
+                paging = PageRequest.of(page, size,
+                        Sort.by(order.substring(1)).descending());
+            }
+            else {
+                paging = PageRequest.of(page, size,
+                        Sort.by(order).ascending());
+            }
+        }
+        else {
+            paging = PageRequest.of(page, size);
+        }
+
         Page<Comment> pageChannels;
-        PageRequest paging = PageRequest.of(page, size);
-        pageChannels = commentRepository.findAll(paging);
+        if(author != null) {
+            pageChannels = commentRepository.findByAuthor(author, paging);
+        }
+        else {
+            pageChannels = commentRepository.findAll(paging);
+        }
+
         return pageChannels.getContent();
     }
-
 
 
     @Operation(

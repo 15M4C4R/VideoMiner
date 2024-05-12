@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -40,15 +42,38 @@ public class CaptionController {
             @ApiResponse(responseCode = "404", content = { @Content(schema = @Schema())})
     })
     @ResponseStatus(HttpStatus.OK)
+
+
     @GetMapping
-    public List<Caption> findAll(@RequestParam(defaultValue = "0") int page,
+    public List<Caption> findAll(@RequestParam(required = false) String name,
+                                 @RequestParam(required = false) String order,
+                                 @RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size) {
+        Pageable paging;
+        if(order != null) {
+            if(order.startsWith("-")) {
+                paging = PageRequest.of(page, size,
+                        Sort.by(order.substring(1)).descending());
+            }
+            else {
+                paging = PageRequest.of(page, size,
+                        Sort.by(order).ascending());
+            }
+        }
+        else {
+            paging = PageRequest.of(page, size);
+        }
+
         Page<Caption> pageChannels;
-        PageRequest paging = PageRequest.of(page, size);
-        pageChannels = captionRepository.findAll(paging);
+        if(name != null) {
+            pageChannels = captionRepository.findByName(name, paging);
+        }
+        else {
+            pageChannels = captionRepository.findAll(paging);
+        }
+
         return pageChannels.getContent();
     }
-
 
 
     @Operation(
