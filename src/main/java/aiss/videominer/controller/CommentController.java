@@ -91,24 +91,4 @@ public class CommentController {
         if(comment.isEmpty()) throw new CommentNotFoundException();
         return comment.get();
     }
-
-
-
-
-/*    @Operation(
-            description = "Get the comments from a video by specifying its id",
-            tags = {"comments", "video", "get"}
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "", content = { @Content(schema = @Schema(implementation = Comment.class), mediaType = "application/json")}),
-            @ApiResponse(responseCode = "", content = { @Content(schema = @Schema())})
-    })
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{idVideo}")
-    public List<Comment> findVideoComments(@PathVariable String idVideo) throws VideoNotFoundException {
-        Optional<Video> video = videoRepository.findById(idVideo);
-        if(video.isEmpty()) throw new VideoNotFoundException();
-        return video.get().getComments();
-    }
-*/
 }

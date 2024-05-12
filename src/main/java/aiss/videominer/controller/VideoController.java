@@ -60,7 +60,7 @@ public class VideoController {
 
         Page<Video> pageChannels;
         if(name != null) {
-            pageChannels = videoRepository.findByName(name, paging);
+            pageChannels = videoRepository.findByNameContaining(name, paging);
         }
         else {
             pageChannels = videoRepository.findAll(paging);

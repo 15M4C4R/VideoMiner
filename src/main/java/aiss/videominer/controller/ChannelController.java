@@ -4,6 +4,7 @@ import aiss.videominer.exception.ChannelNotFoundException;
 import aiss.videominer.model.Channel;
 import aiss.videominer.repository.ChannelRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -81,7 +82,7 @@ public class ChannelController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Channel findById(@PathVariable String id) throws ChannelNotFoundException {
+    public Channel findById(@Parameter(description = "id of the channel to be searched") @PathVariable String id) throws ChannelNotFoundException {
         Optional<Channel> channel = channelRepository.findById(id);
         if (channel.isEmpty()) {
             throw new ChannelNotFoundException();

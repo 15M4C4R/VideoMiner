@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VideoRepository extends JpaRepository<Video,String> {
-    Page<Video> findByName(String name, Pageable pageable);
+    Page<Video> findByNameContaining(String name, Pageable pageable);
 }
